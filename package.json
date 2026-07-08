@@ -1,0 +1,73 @@
+{
+  "name": "selectask",
+  "productName": "SelectAsk",
+  "version": "0.1.0",
+  "description": "Select text anywhere, hold Ctrl, ask AI about it — without losing focus.",
+  "main": "src/main/index.js",
+  "author": "MoustafaTech",
+  "license": "MIT",
+  "homepage": "https://moustafatech.github.io/selectask",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MoustafaTech/selectask.git"
+  },
+  "scripts": {
+    "start": "electron .",
+    "icons": "node scripts/gen-icons.js",
+    "dist": "electron-builder",
+    "dist:all": "electron-builder -mwl"
+  },
+  "dependencies": {
+    "uiohook-napi": "^1.5.4"
+  },
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.moustafatech.selectask",
+    "productName": "SelectAsk",
+    "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
+    "files": [
+      "src/**/*",
+      "assets/**/*",
+      "package.json"
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "MoustafaTech",
+      "repo": "selectask"
+    },
+    "mac": {
+      "category": "public.app-category.productivity",
+      "icon": "assets/icon.png",
+      "target": [
+        { "target": "dmg", "arch": ["arm64", "x64"] },
+        { "target": "zip", "arch": ["arm64", "x64"] }
+      ],
+      "extendInfo": {
+        "NSAppleEventsUsageDescription": "SelectAsk simulates a copy keystroke to capture the text you selected.",
+        "LSUIElement": true
+      }
+    },
+    "win": {
+      "icon": "assets/icon.png",
+      "target": [
+        { "target": "nsis", "arch": ["x64"] },
+        { "target": "portable", "arch": ["x64"] }
+      ]
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false
+    },
+    "linux": {
+      "icon": "assets/icon.png",
+      "category": "Utility",
+      "target": ["AppImage", "deb"]
+    }
+  }
+}

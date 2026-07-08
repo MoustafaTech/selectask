@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; script-src 'self'; img-src 'self' data:;" />
+  <title>SelectAsk</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div id="shell">
+    <header id="titlebar">
+      <div class="brand"><span class="mark"></span>SelectAsk</div>
+      <div class="titlebar-actions">
+        <button id="btn-settings" class="icon-btn" title="Settings" aria-label="Settings">⚙</button>
+        <button id="btn-close" class="icon-btn" title="Close (Esc)" aria-label="Close">✕</button>
+      </div>
+    </header>
+
+    <!-- ASK VIEW -->
+    <main id="view-ask">
+      <div id="selection-chip" title="The text you selected">
+        <span id="selection-text"></span>
+        <button id="selection-expand" aria-label="Expand selection">more</button>
+      </div>
+      <div id="thread" aria-live="polite"></div>
+      <form id="ask-form">
+        <input id="question" type="text" placeholder="Ask about the selection… (Enter to send)" autocomplete="off" />
+        <button id="btn-send" type="submit" title="Send">↵</button>
+        <button id="btn-stop" type="button" title="Stop generating" hidden>■</button>
+      </form>
+      <div id="quick-actions">
+        <button data-q="Explain this simply.">Explain</button>
+        <button data-q="Summarize this in a few bullets.">Summarize</button>
+        <button data-q="If this is code, explain what it does line by line. Otherwise, explain it in detail.">What does it do?</button>
+        <button data-q="Translate this to English. If it is already English, improve the writing.">Translate / fix</button>
+      </div>
+    </main>
+
+    <!-- SETTINGS VIEW -->
+    <main id="view-settings" hidden>
+      <h2>Settings</h2>
+      <label class="field">
+        <span>Provider</span>
+        <select id="cfg-provider">
+          <option value="anthropic">Anthropic (Claude)</option>
+          <option value="openai">OpenAI</option>
+          <option value="google">Google (Gemini)</option>
+          <option value="compatible">OpenAI-compatible (Ollama, Groq, OpenRouter…)</option>
+        </select>
+      </label>
+      <label class="field">
+        <span>API key <em id="key-hint">stored only on this device</em></span>
+        <input id="cfg-key" type="password" placeholder="sk-…" autocomplete="off" />
+      </label>
+      <label class="field">
+        <span>Model</span>
+        <input id="cfg-model" type="text" placeholder="claude-sonnet-5" autocomplete="off" />
+      </label>
+      <label class="field" id="field-baseurl" hidden>
+        <span>Base URL</span>
+        <input id="cfg-baseurl" type="text" placeholder="http://localhost:11434/v1" autocomplete="off" />
+      </label>
+      <fieldset class="field">
+        <span>Triggers</span>
+        <label class="check"><input id="cfg-ctrlselect" type="checkbox" /> Hold <kbd>Ctrl</kbd> while selecting with the mouse</label>
+        <label class="check"><input id="cfg-doublectrl" type="checkbox" /> Double-tap <kbd>Ctrl</kbd> after selecting</label>
+        <label class="check"><input id="cfg-closeblur" type="checkbox" /> Close popup when it loses focus</label>
+      </fieldset>
+      <div class="settings-actions">
+        <button id="btn-save" class="primary">Save</button>
+        <button id="btn-back">Back</button>
+      </div>
+      <p class="settings-note">Open source — <a href="https://github.com/MoustafaTech/selectask" id="link-repo">github.com/MoustafaTech/selectask</a></p>
+    </main>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
