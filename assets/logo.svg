@@ -1,5 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
-  <!-- SelectAsk mark: a selection highlight with a text caret -->
-  <rect x="10" y="25" width="34" height="14" rx="7" fill="#ffffff" opacity="0.34"/>
-  <rect x="47" y="19" width="5" height="26" rx="2.5" fill="#ffffff"/>
+  <!-- SelectAsk mark: text lines, a selected line, and an AI sparkle -->
+  <rect x="11.5" y="16.6" width="35.8" height="4.8" rx="2.4" fill="#ffffff" opacity="0.32"/>
+  <rect x="9.6" y="27.5" width="37.1" height="12.2" rx="6.1" fill="#ffffff"/>
+  <rect x="12.8" y="44.8" width="28.2" height="4.8" rx="2.4" fill="#ffffff" opacity="0.32"/>
+  <polygon points="51.2,12.8 55.7,21.8 51.2,30.7 46.7,21.8" fill="#ffffff"/>
+  <polygon points="42.2,21.8 51.2,17.3 60.2,21.8 51.2,26.2" fill="#ffffff"/>
 </svg>

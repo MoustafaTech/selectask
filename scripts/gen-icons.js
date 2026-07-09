@@ -74,6 +74,20 @@ function inRoundRect(u, v, s) {
   return dx * dx + dy * dy <= r * r;
 }
 
+function inTriangle(u, v, s) {
+  const [[x1, y1], [x2, y2], [x3, y3]] = s.pts;
+  const d1 = (u - x2) * (y1 - y2) - (x1 - x2) * (v - y2);
+  const d2 = (u - x3) * (y2 - y3) - (x2 - x3) * (v - y3);
+  const d3 = (u - x1) * (y3 - y1) - (x3 - x1) * (v - y1);
+  const neg = (d1 < 0) || (d2 < 0) || (d3 < 0);
+  const pos = (d1 > 0) || (d2 > 0) || (d3 > 0);
+  return !(neg && pos);
+}
+
+function inShape(u, v, s) {
+  return s.pts ? inTriangle(u, v, s) : inRoundRect(u, v, s);
+}
+
 function render(file, size, shapes) {
   const rgba = Buffer.alloc(size * size * 4);
   const SS = 3;
@@ -87,7 +101,7 @@ function render(file, size, shapes) {
           // composite shapes top-down: last matching shape wins per sample
           let sr = 0, sg = 0, sb = 0, sa = 0;
           for (const s of shapes) {
-            if (inRoundRect(u, v, s)) {
+            if (inShape(u, v, s)) {
               const [cr, cg, cb] = hex(s.color);
               const ca = s.alpha == null ? 1 : s.alpha;
               // source-over
@@ -120,15 +134,21 @@ const bar = (y, x0, x1, h, color, alpha) =>
   ({ x: x0, y: y - h / 2, w: x1 - x0, h, r: h / 2, color, alpha });
 
 // App icon: ink rounded square, three text lines, middle line selected.
-// Logo glyph: a selection-highlight pill with a text caret at its right.
-const glyph = (pillAlpha, color) => ([
-  { x: 0.19, y: 0.40, w: 0.50, h: 0.20, r: 0.10, color, alpha: pillAlpha },
-  { x: 0.725, y: 0.31, w: 0.075, h: 0.38, r: 0.0375, color }
+// Logo glyph: two faint text lines, a solid selected line, and an AI
+// sparkle touching the selection — "ask AI about the text you selected".
+const glyph = (dimAlpha, color) => ([
+  { x: 0.18, y: 0.26, w: 0.56, h: 0.075, r: 0.037, color, alpha: dimAlpha },
+  { x: 0.15, y: 0.43, w: 0.58, h: 0.19, r: 0.095, color },
+  { x: 0.20, y: 0.70, w: 0.44, h: 0.075, r: 0.037, color, alpha: dimAlpha },
+  { pts: [[0.80, 0.20], [0.87, 0.34], [0.80, 0.48]], color },
+  { pts: [[0.80, 0.20], [0.73, 0.34], [0.80, 0.48]], color },
+  { pts: [[0.66, 0.34], [0.80, 0.27], [0.94, 0.34]], color },
+  { pts: [[0.66, 0.34], [0.80, 0.41], [0.94, 0.34]], color }
 ]);
 
 const appShapes = [
   { x: 0.03, y: 0.03, w: 0.94, h: 0.94, r: 0.21, color: '#131316' },
-  ...glyph(0.34, '#ffffff')
+  ...glyph(0.32, '#ffffff')
 ];
 
 // Tray (macOS template): pure black, alpha carries the shape.
@@ -137,8 +157,12 @@ const trayTemplateShapes = glyph(0.45, '#000000');
 // Tray (Windows/Linux): white on transparent.
 const trayColorShapes = glyph(0.45, '#ffffff');
 
-const assets = path.join(__dirname, '..', 'assets');
-render(path.join(assets, 'icon.png'), 1024, appShapes);
-render(path.join(assets, 'trayTemplate.png'), 22, trayTemplateShapes);
-render(path.join(assets, 'trayTemplate@2x.png'), 44, trayTemplateShapes);
-render(path.join(assets, 'tray.png'), 32, trayColorShapes);
+if (require.main === module) {
+  const assets = path.join(__dirname, '..', 'assets');
+  render(path.join(assets, 'icon.png'), 1024, appShapes);
+  render(path.join(assets, 'trayTemplate.png'), 22, trayTemplateShapes);
+  render(path.join(assets, 'trayTemplate@2x.png'), 44, trayTemplateShapes);
+  render(path.join(assets, 'tray.png'), 32, trayColorShapes);
+}
+
+module.exports = { render, bar };

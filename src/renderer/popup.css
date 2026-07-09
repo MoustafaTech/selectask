@@ -124,8 +124,8 @@ body:not(.mac) #shell {
 
 .brand { display: flex; align-items: center; }
 .logo { width: 16px; height: 16px; display: block; }
-.logo rect { fill: rgba(235, 235, 245, 0.38); }
-.logo rect.caret { fill: var(--fg-secondary); }
+.logo .dim { fill: rgba(235, 235, 245, 0.28); }
+.logo .bright { fill: var(--fg-secondary); }
 
 .titlebar-actions { -webkit-app-region: no-drag; display: flex; gap: 2px; }
 
