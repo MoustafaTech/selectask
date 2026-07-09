@@ -101,11 +101,19 @@ function showPopupAt(point, payload) {
   popup.focus();
 }
 
+const DEBUG = !!process.env.SELECTASK_DEBUG;
+
 async function triggerCapture(point) {
   try {
+    if (DEBUG) console.log('[selectask] trigger', point && point.reason);
     const text = await captureSelection();
+    if (DEBUG) console.log('[selectask] captured', text ? `${text.length} chars` : 'nothing');
     if (!text) return;
-    showPopupAt({ x: point.x, y: point.y }, { type: 'ask', selection: text });
+    // Keyboard events carry no coordinates — fall back to the live cursor.
+    const p = point && Number.isFinite(point.x) && Number.isFinite(point.y)
+      ? { x: point.x, y: point.y }
+      : screen.getCursorScreenPoint();
+    showPopupAt(p, { type: 'ask', selection: text });
   } catch (err) {
     console.error('capture failed', err);
   }
@@ -114,6 +122,12 @@ async function triggerCapture(point) {
 function captureAtCursor() {
   const p = screen.getCursorScreenPoint();
   triggerCapture(p);
+}
+
+// Debug harness: `kill -USR2 <pid>` simulates the trigger firing, entering
+// the same path as a Ctrl tap (including the no-coordinates fallback).
+if (DEBUG && process.platform !== 'win32') {
+  process.on('SIGUSR2', () => triggerCapture({ reason: 'debug-signal' }));
 }
 
 function openSettings() {
