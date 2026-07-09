@@ -15,12 +15,9 @@ const DEFAULTS = {
     'or 2-4 bullets, never more, unless the user explicitly asks for detail. Use markdown. ' +
     'If the selection is code, assume the question is about that code.',
   trigger: {
-    tapCtrl: true,       // select text, then tap Ctrl on its own
-    ctrlSelect: false,   // hold Ctrl while selecting with the mouse
-    hotkey: 'CommandOrControl+Shift+Space'
+    tapCtrl: true        // select text, then tap Ctrl on its own
   },
-  maxTokens: 1024,
-  closeOnBlur: true
+  maxTokens: 1024
 };
 
 let cached = null;
@@ -29,15 +26,18 @@ function file() {
   return path.join(app.getPath('userData'), 'config.json');
 }
 
-// One-time migration: the app used to be called SelectAsk, and userData
-// paths derive from the product name.
+// One-time migration: the app has been SelectAsk and Rexplain before, and
+// userData paths derive from the product name.
 function migrateLegacyConfig() {
   try {
     if (fs.existsSync(file())) return;
-    const legacy = path.join(app.getPath('userData'), '..', 'SelectAsk', 'config.json');
-    if (fs.existsSync(legacy)) {
-      fs.mkdirSync(path.dirname(file()), { recursive: true });
-      fs.copyFileSync(legacy, file());
+    for (const name of ['Rexplain', 'SelectAsk']) {
+      const legacy = path.join(app.getPath('userData'), '..', name, 'config.json');
+      if (fs.existsSync(legacy)) {
+        fs.mkdirSync(path.dirname(file()), { recursive: true });
+        fs.copyFileSync(legacy, file());
+        return;
+      }
     }
   } catch { /* fresh start is fine */ }
 }

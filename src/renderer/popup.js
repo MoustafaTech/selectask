@@ -9,8 +9,8 @@ const questionEl = $('question');
 
 if (navigator.platform.toLowerCase().includes('mac')) document.body.classList.add('mac');
 
-let selection = '';
-let history = [];        // [{role, content}] excluding system
+let pendingSelections = [];  // selections not yet sent with a question
+let history = [];            // [{role, content}] excluding system
 let streamingEl = null;
 let streamingBody = null;
 let streamingRaw = '';
@@ -41,9 +41,6 @@ async function openSettingsView() {
     $('cfg-key').value = (cfg.apiKeys || {})[cfg.provider] || '';
     $('cfg-model').value = cfg.model || '';
     $('cfg-baseurl').value = cfg.baseUrl || '';
-    $('cfg-tapctrl').checked = !!cfg.trigger.tapCtrl;
-    $('cfg-ctrlselect').checked = !!cfg.trigger.ctrlSelect;
-    $('cfg-closeblur').checked = !!cfg.closeOnBlur;
     syncProviderFields();
     setView('settings');
   } catch (err) {
@@ -382,14 +379,28 @@ function syncHasText() {
   $('ask-form').classList.toggle('has-text', questionEl.value.trim().length > 0);
 }
 
-function systemContext() {
-  return `The user selected the following text on their screen:\n\n"""\n${selection}\n"""`;
+// Show a captured selection in the thread as a context chip.
+function addSelectionChip(text) {
+  const el = document.createElement('div');
+  el.className = 'msg selchip';
+  const snippet = text.length > 220 ? text.slice(0, 220) + '…' : text;
+  el.textContent = snippet;
+  thread.appendChild(el);
+  thread.scrollTop = thread.scrollHeight;
 }
 
 async function ask(q) {
   if (busy || !q.trim()) return;
   addMsg('user', escapeHtml(q));
-  history.push({ role: 'user', content: history.length === 0 ? `${systemContext()}\n\nQuestion: ${q}` : q });
+  let content = q;
+  if (pendingSelections.length) {
+    const ctx = pendingSelections.map(sel =>
+      `The user selected the following text on their screen:\n"""\n${sel}\n"""`
+    ).join('\n\n');
+    content = `${ctx}\n\nQuestion: ${q}`;
+    pendingSelections = [];
+  }
+  history.push({ role: 'user', content });
   questionEl.value = '';
   syncHasText();
   setBusy(true);
@@ -458,11 +469,21 @@ document.addEventListener('keydown', (e) => {
 
 window.rexplain.onSession(async (payload) => {
   if (payload.type === 'settings') { openSettingsView(); return; }
-  selection = payload.selection || '';
-  history = [];
-  thread.innerHTML = '';
-  streamingEl = null;
-  setBusy(false);
+  const sel = payload.selection || '';
+  const appending = payload.append && (history.length > 0 || pendingSelections.length > 0);
+  if (!appending) {
+    // fresh conversation
+    history = [];
+    pendingSelections = [];
+    thread.innerHTML = '';
+    streamingEl = null;
+    streamingBody = null;
+    setBusy(false);
+  }
+  if (sel) {
+    pendingSelections.push(sel);
+    addSelectionChip(sel);
+  }
   setView('ask');
 
   try {
@@ -501,13 +522,7 @@ $('btn-save').addEventListener('click', async () => {
       provider,
       model: $('cfg-model').value.trim() || MODEL_PLACEHOLDERS[provider],
       baseUrl: $('cfg-baseurl').value.trim(),
-      apiKeys: { [provider]: $('cfg-key').value },
-      trigger: {
-        tapCtrl: $('cfg-tapctrl').checked,
-        ctrlSelect: $('cfg-ctrlselect').checked,
-        hotkey: 'CommandOrControl+Shift+Space'
-      },
-      closeOnBlur: $('cfg-closeblur').checked
+      apiKeys: { [provider]: $('cfg-key').value }
     });
   } catch (err) {
     setView('ask');

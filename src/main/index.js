@@ -2,7 +2,7 @@
 
 const {
   app, BrowserWindow, Tray, Menu, ipcMain, screen,
-  globalShortcut, nativeImage, shell, systemPreferences
+  nativeImage, shell, systemPreferences
 } = require('electron');
 const path = require('path');
 
@@ -36,7 +36,6 @@ function onReady() {
 
   createPopup();
   createTray();
-  registerHotkey();
 
   stopTrigger = startTrigger(
     () => config.load(),
@@ -54,7 +53,9 @@ function createPopup() {
     transparent: true,
     // The pixel theme is opaque — no vibrancy. transparent stays true so the
     // 9px OS corner mask (matched by the shell's CSS radius) renders clean.
-    resizable: false,
+    resizable: true,
+    minWidth: 360,
+    minHeight: 300,
     minimizable: false,
     maximizable: false,
     fullscreenable: false,
@@ -71,11 +72,6 @@ function createPopup() {
   popup.loadFile(path.join(__dirname, '..', 'renderer', 'popup.html'));
   popup.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
 
-  popup.on('blur', () => {
-    if (config.load().closeOnBlur && !popup.webContents.isDevToolsOpened()) {
-      hidePopup();
-    }
-  });
   popup.on('close', (e) => {
     e.preventDefault();
     hidePopup();
@@ -99,19 +95,26 @@ function showPopupAt(point, payload) {
   popup.focus();
 }
 
-const DEBUG = !!(process.env.REXPLAIN_DEBUG || process.env.SELECTASK_DEBUG);
+const DEBUG = !!(process.env.REX_DEBUG || process.env.REXPLAIN_DEBUG || process.env.SELECTASK_DEBUG);
 
 async function triggerCapture(point) {
   try {
-    if (DEBUG) console.log('[rexplain] trigger', point && point.reason);
+    if (DEBUG) console.log('[rex] trigger', point && point.reason);
     const text = await captureSelection();
-    if (DEBUG) console.log('[rexplain] captured', text ? `${text.length} chars` : 'nothing');
+    if (DEBUG) console.log('[rex] captured', text ? `${text.length} chars` : 'nothing');
     if (!text) return;
     // Keyboard events carry no coordinates — fall back to the live cursor.
     const p = point && Number.isFinite(point.x) && Number.isFinite(point.y)
       ? { x: point.x, y: point.y }
       : screen.getCursorScreenPoint();
-    showPopupAt(p, { type: 'ask', selection: text });
+    const append = popup && popup.isVisible();
+    if (append) {
+      // Don't yank a visible popup around the screen; just feed it context.
+      popup.webContents.send('session', { type: 'ask', selection: text, append: true });
+      popup.focus();
+    } else {
+      showPopupAt(p, { type: 'ask', selection: text, append: false });
+    }
   } catch (err) {
     console.error('capture failed', err);
   }
@@ -133,23 +136,11 @@ function openSettings() {
   showPopupAt(p, { type: 'settings' });
 }
 
-function registerHotkey() {
-  const cfg = config.load();
-  globalShortcut.unregisterAll();
-  if (cfg.trigger.hotkey) {
-    try {
-      globalShortcut.register(cfg.trigger.hotkey, captureAtCursor);
-    } catch (err) {
-      console.error('hotkey registration failed', err);
-    }
-  }
-}
-
 function createTray() {
   const iconName = process.platform === 'darwin' ? 'trayTemplate.png' : 'tray.png';
   const icon = nativeImage.createFromPath(path.join(__dirname, '..', '..', 'assets', iconName));
   tray = new Tray(icon);
-  tray.setToolTip('Rexplain — select text, ask the dino');
+  tray.setToolTip('Rex — select text, tap Ctrl, ask the dino');
   const rebuild = () => {
     tray.setContextMenu(Menu.buildFromTemplate([
       { label: 'Ask about current selection', click: captureAtCursor },
@@ -162,8 +153,8 @@ function createTray() {
       },
       { label: 'Settings…', click: openSettings },
       { type: 'separator' },
-      { label: 'GitHub', click: () => shell.openExternal('https://github.com/MoustafaTech/rexplain') },
-      { label: 'Quit Rexplain', click: () => { app.exit(0); } }
+      { label: 'GitHub', click: () => shell.openExternal('https://github.com/MoustafaTech/rex') },
+      { label: 'Quit Rex', click: () => { app.exit(0); } }
     ]));
   };
   rebuild();
@@ -192,8 +183,7 @@ ipcMain.handle('config:set', (_e, patch) => {
     }
     patch.apiKeys = merged;
   }
-  const saved = config.save(patch);
-  registerHotkey();
+  config.save(patch);
   return true;
 });
 
@@ -229,7 +219,6 @@ ipcMain.on('open-external', (_e, url) => {
 });
 
 app.on('will-quit', () => {
-  globalShortcut.unregisterAll();
   if (stopTrigger) stopTrigger();
 });
 

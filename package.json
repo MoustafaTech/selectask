@@ -1,15 +1,15 @@
 {
-  "name": "rexplain",
-  "productName": "Rexplain",
-  "version": "0.5.0",
-  "description": "Select text anywhere, tap Ctrl, and a little dino fetches you an AI answer \u2014 without losing your focus.",
+  "name": "rex",
+  "productName": "Rex",
+  "version": "0.6.0",
+  "description": "Select text anywhere, tap Ctrl, and Rex the pixel dino fetches you an AI answer.",
   "main": "src/main/index.js",
   "author": "MoustafaTech <moustafaessam2212@gmail.com>",
   "license": "MIT",
-  "homepage": "https://github.com/MoustafaTech/rexplain",
+  "homepage": "https://github.com/MoustafaTech/rex",
   "repository": {
     "type": "git",
-    "url": "https://github.com/MoustafaTech/rexplain.git"
+    "url": "https://github.com/MoustafaTech/rex.git"
   },
   "scripts": {
     "start": "electron .",
@@ -25,9 +25,9 @@
     "electron-builder": "^25.1.8"
   },
   "build": {
-    "appId": "com.moustafatech.rexplain",
+    "appId": "com.moustafatech.rex",
     "npmRebuild": false,
-    "productName": "Rexplain",
+    "productName": "Rex",
     "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
     "files": [
       "src/**/*",
@@ -40,7 +40,7 @@
     "publish": {
       "provider": "github",
       "owner": "MoustafaTech",
-      "repo": "rexplain"
+      "repo": "rex"
     },
     "mac": {
       "category": "public.app-category.productivity",
@@ -62,7 +62,7 @@
         }
       ],
       "extendInfo": {
-        "NSAppleEventsUsageDescription": "Rexplain simulates a copy keystroke to capture the text you selected.",
+        "NSAppleEventsUsageDescription": "Rex simulates a copy keystroke to capture the text you selected.",
         "LSUIElement": true
       }
     },

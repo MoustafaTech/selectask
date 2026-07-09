@@ -1,4 +1,4 @@
-/* Rexplain — pixel dino theme.
+/* Rex — pixel dino theme.
    Night-mode runner world: Chrome's offline-game palette, inverted
    (#535353 ink → #ACACAC). One rule set: everything sits on a 2px pixel
    grid; no border-radius (the OS window edge is the only exception), no
@@ -33,8 +33,6 @@
   --font-pixel: "Press Start 2P", monospace;
   --font-body:  "VT323", "Courier New", monospace;
 
-  --pxb: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='5' height='5'%3E%3Cpath d='M2 1h1v1h-1zM1 2h1v1h-1zM3 2h1v1h-1zM2 3h1v1h-1z' fill='%236a6a6a'/%3E%3C/svg%3E");
-  --pxb-hot: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='5' height='5'%3E%3Cpath d='M2 1h1v1h-1zM1 2h1v1h-1zM3 2h1v1h-1zM2 3h1v1h-1z' fill='%23e8e8e8'/%3E%3C/svg%3E");
 }
 
 * {
@@ -61,15 +59,10 @@ img, canvas, svg { image-rendering: pixelated; }
 
 ::selection { background: var(--text-1); color: var(--bg); }
 
-/* pixel chrome primitives */
-.px-border, #ask-form, .msg.user, .msg.error,
+/* pixel chrome primitives: closed 2px boxes, sharp corners */
+#ask-form, .msg.user, .msg.error,
 .field input[type="text"], .field input[type="password"], .field select {
-  border: 4px solid transparent;
-  border-image-slice: 2;
-  border-image-width: 2;
-  border-image-repeat: stretch;
-  border-image-outset: 0;
-  border-image-source: var(--pxb);
+  border: 2px solid var(--border);
 }
 
 /* ---------- shell ---------- */
@@ -100,7 +93,7 @@ img, canvas, svg { image-rendering: pixelated; }
 
 .brand { display: flex; align-items: center; gap: 8px; }
 .brand::after {
-  content: "REXPLAIN";
+  content: "REX";
   font-family: var(--font-pixel);
   font-size: 8px;
   line-height: 1.5;
@@ -204,6 +197,26 @@ main {
 
 .msg { word-break: break-word; }
 
+.msg.selchip {
+  align-self: stretch;
+  border-left: 4px solid var(--disabled);
+  background: var(--raised);
+  color: var(--text-2);
+  font-size: 16px;
+  padding: 4px 8px;
+  max-height: 66px;
+  overflow: hidden;
+}
+.msg.selchip::before {
+  content: "SELECTED";
+  display: block;
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  line-height: 1.5;
+  color: var(--disabled);
+  margin-bottom: 2px;
+}
+
 .msg.user {
   align-self: flex-end;
   max-width: 75%;
@@ -246,7 +259,7 @@ main {
 .msg.error {
   background: var(--text-1);
   color: var(--bg);
-  border-image-source: var(--pxb-hot);
+  border-color: var(--text-1);
   padding: 8px 10px;
   font-size: 16px;
 }
@@ -289,11 +302,7 @@ main {
 }
 .msg pre {
   background: var(--bg);
-  border: 4px solid transparent;
-  border-image-slice: 2;
-  border-image-width: 2;
-  border-image-repeat: stretch;
-  border-image-source: var(--pxb);
+  border: 2px solid var(--ink-dim);
   padding: 8px;
   margin: 6px 0;
   overflow-x: auto;
@@ -307,17 +316,16 @@ main {
 
 #ask-form {
   flex: none;
-  margin: 8px;
-  height: 32px;
+  margin: 10px;
+  height: 36px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   padding: 0 4px 0 10px;
-  background: var(--raised);
+  background: var(--bg);
 }
 #ask-form:focus-within {
-  border-image-source: var(--pxb-hot);
-  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.25);
+  border-color: var(--text-1);
 }
 
 #question {
@@ -424,8 +432,7 @@ main {
 }
 .field select option { background: var(--bg); color: var(--text-1); }
 .field input:focus, .field select:focus {
-  border-image-source: var(--pxb-hot);
-  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.25);
+  border-color: var(--text-1);
 }
 
 .check {

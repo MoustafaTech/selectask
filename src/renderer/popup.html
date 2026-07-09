@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; script-src 'self'; img-src 'self' data:; font-src 'self';" />
-  <title>Rexplain</title>
+  <title>Rex</title>
   <link rel="stylesheet" href="popup.css" />
 </head>
 <body>
   <div id="shell">
     <header id="titlebar">
-      <div class="brand" title="Rexplain">
+      <div class="brand" title="Rex">
         <svg class="logo" viewBox="0 0 22 22" aria-hidden="true" shape-rendering="crispEdges">
           <path d="M14 0h8v1h-8zM13 1h2v1h-2zM16 1h6v1h-6zM13 2h9v1h-9zM13 3h9v1h-9zM13 4h5v1h-5zM13 5h8v1h-8zM13 6h5v1h-5zM0 7h1v1h-1zM13 7h4v1h-4zM0 8h1v1h-1zM12 8h5v1h-5zM0 9h2v1h-2zM11 9h6v1h-6zM0 10h3v1h-3zM10 10h10v1h-10zM0 11h4v1h-4zM9 11h11v1h-11zM0 12h5v1h-5zM8 12h10v1h-10zM0 13h19v1h-19zM1 14h17v1h-17zM2 15h15v1h-15zM3 16h13v1h-13zM4 17h11v1h-11zM5 18h4v1h-4zM11 18h4v1h-4zM5 19h3v1h-3zM12 19h3v1h-3zM5 20h2v1h-2zM13 20h2v1h-2zM5 21h3v1h-3zM13 21h3v1h-3z"/>
         </svg>
@@ -55,17 +55,12 @@
         <span>Base URL</span>
         <input id="cfg-baseurl" type="text" placeholder="http://localhost:11434/v1" autocomplete="off" />
       </label>
-      <fieldset class="field">
-        <span>Triggers</span>
-        <label class="check"><input id="cfg-tapctrl" type="checkbox" /> Select text, then tap <kbd>Ctrl</kbd></label>
-        <label class="check"><input id="cfg-ctrlselect" type="checkbox" /> Hold <kbd>Ctrl</kbd> while selecting with the mouse</label>
-        <label class="check"><input id="cfg-closeblur" type="checkbox" /> Close popup when it loses focus</label>
-      </fieldset>
       <div class="settings-actions">
         <button id="btn-save" class="primary">Save</button>
         <button id="btn-back">Back</button>
       </div>
-      <p class="settings-note">Open source — <a href="https://github.com/MoustafaTech/rexplain" id="link-repo">github.com/MoustafaTech/rexplain</a></p>
+      <p class="settings-note">Trigger: select text, then tap <kbd>Ctrl</kbd>. Select more text while Rex is open to add it to the conversation.</p>
+      <p class="settings-note">Open source — <a href="https://github.com/MoustafaTech/rex" id="link-repo">github.com/MoustafaTech/rex</a></p>
     </main>
   </div>
   <script src="dev-stub.js"></script>
