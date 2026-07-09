@@ -15,6 +15,9 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+/* the hidden attribute must win over display rules like .field { display:flex } */
+[hidden] { display: none !important; }
+
 html, body { height: 100%; background: transparent; }
 
 body {

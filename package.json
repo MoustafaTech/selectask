@@ -1,7 +1,7 @@
 {
   "name": "selectask",
   "productName": "SelectAsk",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Select text anywhere, hold Ctrl, ask AI about it — without losing focus.",
   "main": "src/main/index.js",
   "author": "MoustafaTech <moustafaessam2212@gmail.com>",
