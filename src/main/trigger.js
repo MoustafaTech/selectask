@@ -9,7 +9,7 @@
 
 const DRAG_THRESHOLD_PX = 6;
 
-function startTrigger(getConfig, shouldIgnore, onTrigger) {
+function startTrigger(getConfig, shouldIgnore, onTrigger, onDragSelect) {
   let uIOhook, UiohookKey;
   try {
     ({ uIOhook, UiohookKey } = require('uiohook-napi'));
@@ -62,10 +62,10 @@ function startTrigger(getConfig, shouldIgnore, onTrigger) {
     const wasDrag = dragged && mouseDownPos;
     mouseDownPos = null;
     dragged = false;
-    if (!wasDrag || !ctrlDown) return;
-    const cfg = getConfig();
-    if (!cfg.trigger.ctrlSelect || shouldIgnore()) return;
-    onTrigger({ x: e.x, y: e.y, reason: 'ctrl-select' });
+    if (!wasDrag) return;
+    // A drag anywhere is a possible new selection — the main process
+    // decides whether an open popup should refresh its context.
+    if (onDragSelect && !shouldIgnore()) onDragSelect({ x: e.x, y: e.y });
   });
 
   try {

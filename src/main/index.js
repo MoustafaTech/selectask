@@ -40,7 +40,8 @@ function onReady() {
   stopTrigger = startTrigger(
     () => config.load(),
     () => triggersPaused || (popup && popup.isVisible() && popup.isFocused()),
-    (point) => triggerCapture(point)
+    (point) => triggerCapture(point),
+    () => liveSelectionUpdate()
   );
 }
 
@@ -118,6 +119,23 @@ async function triggerCapture(point) {
   } catch (err) {
     console.error('capture failed', err);
   }
+}
+
+// While the popup is open, a plain drag-selection anywhere refreshes the
+// pending context — no Ctrl needed.
+let liveTimer = null;
+function liveSelectionUpdate() {
+  if (!popup || !popup.isVisible() || popup.isFocused() || triggersPaused) return;
+  clearTimeout(liveTimer);
+  liveTimer = setTimeout(async () => {
+    try {
+      const text = await captureSelection();
+      if (DEBUG) console.log('[rex] live selection', text ? `${text.length} chars` : 'nothing');
+      if (text) {
+        popup.webContents.send('session', { type: 'ask', selection: text, append: true, live: true });
+      }
+    } catch { /* stay quiet for live updates */ }
+  }, 250);
 }
 
 function captureAtCursor() {

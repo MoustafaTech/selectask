@@ -29,11 +29,16 @@ const MODEL_PLACEHOLDERS = {
 
 function setView(name) {
   const showSettingsView = name === 'settings';
+  const wasSettings = viewAsk.hidden;
   viewAsk.hidden = showSettingsView;
   viewSettings.hidden = !showSettingsView;
   $('btn-back-top').hidden = !showSettingsView;
   $('btn-settings').hidden = showSettingsView;
-  if (!showSettingsView) questionEl.focus();
+  if (!showSettingsView) {
+    questionEl.focus();
+    // returning from settings: the canvas was display:none, so re-fit it
+    if (wasSettings && typeof initRunner === 'function') initRunner();
+  }
 }
 
 /* ---------- theme (day / night run) ---------- */
@@ -403,13 +408,17 @@ function syncHasText() {
 }
 
 // Show a captured selection in the thread as a context chip.
+let lastChipEl = null;
+function chipText(text) {
+  return text.length > 220 ? text.slice(0, 220) + '…' : text;
+}
 function addSelectionChip(text) {
   const el = document.createElement('div');
   el.className = 'msg selchip';
-  const snippet = text.length > 220 ? text.slice(0, 220) + '…' : text;
-  el.textContent = snippet;
+  el.textContent = chipText(text);
   thread.appendChild(el);
   thread.scrollTop = thread.scrollHeight;
+  lastChipEl = el;
 }
 
 async function ask(q) {
@@ -422,6 +431,7 @@ async function ask(q) {
     ).join('\n\n');
     content = `${ctx}\n\nQuestion: ${q}`;
     pendingSelections = [];
+    lastChipEl = null;
   }
   history.push({ role: 'user', content });
   questionEl.value = '';
@@ -504,10 +514,19 @@ window.rex.onSession(async (payload) => {
     setBusy(false);
   }
   if (sel) {
-    pendingSelections.push(sel);
-    addSelectionChip(sel);
+    const last = pendingSelections[pendingSelections.length - 1];
+    if (sel !== last) {
+      if (payload.live && pendingSelections.length && lastChipEl) {
+        // live update: the user changed their selection — refresh in place
+        pendingSelections[pendingSelections.length - 1] = sel;
+        lastChipEl.textContent = chipText(sel);
+      } else {
+        pendingSelections.push(sel);
+        addSelectionChip(sel);
+      }
+    }
   }
-  setView('ask');
+  if (!payload.live) setView('ask');
 
   try {
     const cfg = await window.rex.getConfig();
