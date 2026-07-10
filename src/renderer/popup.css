@@ -208,7 +208,7 @@ main {
   border: 2px solid var(--surface);
 }
 
-.msg { word-break: break-word; }
+.msg { flex-shrink: 0; word-break: break-word; }
 
 .msg.selchip {
   align-self: stretch;

@@ -1,7 +1,7 @@
 {
   "name": "rex",
   "productName": "Rex",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "Select text anywhere, tap Ctrl, and Rex the pixel dino fetches you an AI answer.",
   "main": "src/main/index.js",
   "author": "MoustafaTech <moustafaessam2212@gmail.com>",
