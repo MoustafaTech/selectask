@@ -1,11 +1,11 @@
 'use strict';
 
 // Global input detection.
-// Primary gesture (tapCtrl): select text however you like, then tap Ctrl —
+// The trigger (tapCtrl): select text however you like, then tap Ctrl —
 // press and release it on its own. If any other key or the mouse is used
 // while Ctrl is down (Ctrl+C, Ctrl+click, Ctrl+scroll…), the tap is void.
-// Optional gesture (ctrlSelect): hold Ctrl while selecting with the mouse;
-// fires on mouse-up.
+// Separately, any drag-release is reported so an open popup can refresh
+// its selection context live.
 
 const DRAG_THRESHOLD_PX = 6;
 
@@ -14,7 +14,7 @@ function startTrigger(getConfig, shouldIgnore, onTrigger, onDragSelect) {
   try {
     ({ uIOhook, UiohookKey } = require('uiohook-napi'));
   } catch (err) {
-    console.error('uiohook-napi failed to load; falling back to hotkey only.', err);
+    console.error('uiohook-napi failed to load; the Ctrl trigger is unavailable.', err);
     return () => {};
   }
 
@@ -71,12 +71,12 @@ function startTrigger(getConfig, shouldIgnore, onTrigger, onDragSelect) {
   try {
     uIOhook.start();
   } catch (err) {
-    // On macOS this means Accessibility access is not granted yet. The
-    // hotkey still works; gestures activate on next launch after granting.
+    // On macOS this means Accessibility access is not granted yet.
     console.error(
       'Could not watch global input (on macOS: grant Accessibility access in ' +
-      'System Settings → Privacy & Security → Accessibility, then relaunch). ' +
-      'The global hotkey still works.', String(err.message || err)
+      'System Settings → Privacy & Security → Accessibility, then relaunch Rex). ' +
+      'Until then, use the tray menu: "Ask about current selection".',
+      String(err.message || err)
     );
     return () => {};
   }

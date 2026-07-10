@@ -15,8 +15,8 @@
     apiKeys: { anthropic: '••••••••mock' },
     model: 'claude-sonnet-5',
     baseUrl: '',
-    trigger: { tapCtrl: true, ctrlSelect: false, hotkey: 'CommandOrControl+Shift+Space' },
-    closeOnBlur: true
+    theme: 'system',
+    trigger: { tapCtrl: true }
   };
 
   window.rex = {
