@@ -77,13 +77,22 @@ The base URL field only appears for the OpenAI-compatible option (e.g. `http://l
 
 ## Run from source
 
+### Running for the first time
+
 ```bash
 git clone https://github.com/MoustafaTech/rex.git
 cd rex && npm install && npm start        # Node 20+, nothing else to install
 ```
 
-- **macOS**: grant Accessibility and Automation to the app that launches Rex (your terminal or IDE — the prompts name it, not Rex), then restart it.
+- **macOS**: grant Accessibility and Automation to the app that launches Rex (your terminal or IDE — the prompts name it, not Rex), then quit Rex and start it again.
 - **Linux**: install the clipboard helpers listed above.
+
+### Running after the first time
+
+```bash
+cd rex && npm start
+```
+
 - Debug logs: `REX_DEBUG=1 npm start` · Build installers: `npm run dist`
 
 ## How it works
