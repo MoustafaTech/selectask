@@ -12,6 +12,26 @@ Open source, your own API key, straight to your provider. No server, no account.
 
 ## Install
 
+### From the terminal (fastest)
+
+Paste one line — it downloads the latest release, installs it, and starts Rex. Close the terminal; Rex keeps running in the tray.
+
+**macOS / Linux**
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/MoustafaTech/rex/main/install.sh | sh
+```
+
+**Windows** (PowerShell)
+
+```powershell
+irm https://raw.githubusercontent.com/MoustafaTech/rex/main/install.ps1 | iex
+```
+
+On macOS the script also clears the unsigned-app block, so there's no Gatekeeper dance — just grant **Accessibility** when the settings pane opens (one time), then quit and reopen Rex from the menu bar.
+
+### Manual download
+
 **[⬇ Download the latest release](https://github.com/MoustafaTech/rex/releases/latest)**, then follow your OS:
 
 <details>
