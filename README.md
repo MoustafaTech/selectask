@@ -6,7 +6,7 @@
 
 You're deep in a long AI chat, a dense article, or someone else's code — and one line stops you. Opening a new chat means losing your focus.
 
-**Rex is the ten-second path**: select the thing, tap `Ctrl`, ask — the answer lands right where you are.
+**Rex (your assistant)**: select the thing, tap `Ctrl`, ask — the answer lands right where you are.
 
 Open source, your own API key, straight to your provider. No server, no account.
 
