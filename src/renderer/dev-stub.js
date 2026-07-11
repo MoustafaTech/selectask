@@ -16,7 +16,7 @@
     model: 'claude-sonnet-5',
     baseUrl: '',
     theme: 'system',
-    trigger: { tapCtrl: true }
+    trigger: { tapCtrl: true, doubleTapCtrl: true }
   };
 
   window.rex = {

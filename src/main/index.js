@@ -45,7 +45,8 @@ function onReady() {
     () => config.load(),
     () => triggersPaused || (popup && popup.isVisible() && popup.isFocused()),
     (point) => triggerCapture(point),
-    () => liveSelectionUpdate()
+    () => liveSelectionUpdate(),
+    (point) => openAnywhere(point)
   );
 }
 
@@ -157,6 +158,25 @@ function captureAtCursor() {
   triggerCapture(p);
 }
 
+// Double-tap Ctrl (or the tray item): open Rex with nothing selected — the
+// conversation resumes if one is going, otherwise it's a blank ask box.
+function openAnywhere(point) {
+  try {
+    if (DEBUG) console.log('[rex] open', (point && point.reason) || 'tray');
+    if (popup && popup.isVisible()) {
+      popup.webContents.send('session', { type: 'ask', append: true });
+      popup.focus();
+      return;
+    }
+    const p = point && Number.isFinite(point.x) && Number.isFinite(point.y)
+      ? { x: point.x, y: point.y }
+      : screen.getCursorScreenPoint();
+    showPopupAt(p, { type: 'ask', append: true });
+  } catch (err) {
+    console.error('open failed', err);
+  }
+}
+
 // Debug harness: `kill -USR2 <pid>` simulates the trigger firing, entering
 // the same path as a Ctrl tap (including the no-coordinates fallback).
 if (DEBUG && process.platform !== 'win32') {
@@ -175,6 +195,7 @@ function createTray() {
   tray.setToolTip('Rex — select text, tap Ctrl, ask the dino');
   const rebuild = () => {
     tray.setContextMenu(Menu.buildFromTemplate([
+      { label: 'Open Rex', click: () => openAnywhere() },
       { label: 'Ask about current selection', click: captureAtCursor },
       { type: 'separator' },
       {

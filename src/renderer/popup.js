@@ -41,7 +41,9 @@ function setView(name) {
   viewSettings.hidden = !showSettingsView;
   $('btn-back-top').hidden = !showSettingsView;
   $('btn-settings').hidden = showSettingsView;
-  if (!showSettingsView) {
+  if (showSettingsView) {
+    $('cfg-theme').focus(); // keyboard users land on the first field
+  } else {
     questionEl.focus();
     // returning from settings: the canvas was display:none, so re-fit it
     if (wasSettings && typeof initRunner === 'function') initRunner();
@@ -567,7 +569,8 @@ $('cfg-provider').addEventListener('change', async () => {
   syncProviderFields();
 });
 
-$('btn-save').addEventListener('click', async () => {
+$('settings-form').addEventListener('submit', async (e) => {
+  e.preventDefault(); // Enter anywhere in the form saves
   const provider = $('cfg-provider').value;
   try {
     await window.rex.setConfig({
@@ -590,8 +593,25 @@ $('btn-back-top').addEventListener('click', () => setView('ask'));
 $('btn-settings').addEventListener('click', openSettingsView);
 $('btn-close').addEventListener('click', () => window.rex.close());
 
+// Everything is keyboard-reachable: Esc backs out of settings and closes
+// the popup, Ctrl/Cmd+, toggles settings, / jumps back to the ask box, and
+// Tab walks the controls (browser default).
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') window.rex.close();
+  if (e.key === 'Escape') {
+    if (!viewSettings.hidden) setView('ask');
+    else window.rex.close();
+    return;
+  }
+  if ((e.metaKey || e.ctrlKey) && e.key === ',') {
+    e.preventDefault();
+    if (viewSettings.hidden) openSettingsView();
+    else setView('ask');
+    return;
+  }
+  if (e.key === '/' && viewSettings.hidden && document.activeElement !== questionEl) {
+    e.preventDefault();
+    questionEl.focus();
+  }
 });
 
 // External links open in the browser, never inside the popup.

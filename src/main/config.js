@@ -19,7 +19,8 @@ const DEFAULTS = {
     'more detail, a longer answer, or a deeper conversation. Use markdown. If the selection ' +
     'is code, assume the question is about that code.',
   trigger: {
-    tapCtrl: true        // select text, then tap Ctrl on its own
+    tapCtrl: true,       // select text, then tap Ctrl on its own
+    doubleTapCtrl: true  // tap Ctrl twice to open Rex with no selection
   },
   maxTokens: 1024
 };

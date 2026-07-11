@@ -66,10 +66,12 @@ The base URL field only appears for the OpenAI-compatible option (e.g. `http://l
 
 ## Use
 
-1. **Select text** anywhere → **tap `Ctrl`** on its own (`Ctrl+C`, `Ctrl+click`… never trigger it).
+1. **Select text** anywhere → **tap `Ctrl`** on its own (`Ctrl+C`, `Ctrl+click`… never trigger it). Nothing selected? **Double-tap `Ctrl`** and Rex opens anyway, ready to ask — a bare `Ctrl` tap is the one gesture that does nothing else on macOS, Windows, or Linux.
 2. **Ask.** Answers come back short and summarized — say "explain in detail" when you want more. Follow up in the same chat.
 3. **Change or add context without retapping**: while Rex is open, drag-select different text — the pending context updates live. Tap `Ctrl` to pin it and stack another selection into the same conversation.
 4. `Esc` or ✕ closes (it never closes on its own). Drag any edge to resize.
+
+**Fully keyboard-drivable**: `Esc` backs out of settings, then closes · `Ctrl/⌘` + `,` opens settings · `Tab` moves around · `Enter` saves · `/` jumps to the ask box. The full list lives in Settings.
 
 **Extras**: light/dark theme follows your system (or pick in Settings — light is the dino's day run ☀️, dark is the night run 🌙) · the dino sprints while answers stream · `Space` makes him jump · your high score persists.
 

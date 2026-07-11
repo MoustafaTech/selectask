@@ -35,6 +35,7 @@
     <!-- SETTINGS VIEW -->
     <main id="view-settings" hidden>
       <h2>Settings</h2>
+      <form id="settings-form">
       <label class="field">
         <span>Theme</span>
         <select id="cfg-theme">
@@ -71,9 +72,19 @@
         <input id="cfg-baseurl" type="text" placeholder="http://localhost:11434/v1" autocomplete="off" />
       </label>
       <div class="settings-actions">
-        <button id="btn-save" class="primary">Save</button>
+        <button id="btn-save" class="primary" type="submit">Save</button>
       </div>
-      <p class="settings-note">Trigger: select text, then tap <kbd>Ctrl</kbd>. Select more text while Rex is open to add it to the conversation.</p>
+      </form>
+      <h2 class="settings-sub">Keyboard</h2>
+      <div class="key-row"><span class="keys"><kbd>Ctrl</kbd> tap</span><span>ask about selected text</span></div>
+      <div class="key-row"><span class="keys"><kbd>Ctrl</kbd> ×2</span><span>open Rex anywhere, no selection</span></div>
+      <div class="key-row"><span class="keys"><kbd>Esc</kbd></span><span>back · close</span></div>
+      <div class="key-row"><span class="keys"><kbd>Ctrl/Cmd</kbd>+<kbd>,</kbd></span><span>settings</span></div>
+      <div class="key-row"><span class="keys"><kbd>Tab</kbd></span><span>move around</span></div>
+      <div class="key-row"><span class="keys"><kbd>Enter</kbd></span><span>save settings</span></div>
+      <div class="key-row"><span class="keys"><kbd>/</kbd></span><span>jump to the ask box</span></div>
+      <div class="key-row"><span class="keys"><kbd>Space</kbd></span><span>dino jump</span></div>
+      <p class="settings-note">Select more text while Rex is open to add it to the conversation.</p>
       <p class="settings-note">Open source — <a href="https://github.com/MoustafaTech/rex">github.com/MoustafaTech/rex</a></p>
     </main>
   </div>

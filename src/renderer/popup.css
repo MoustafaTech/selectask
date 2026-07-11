@@ -426,6 +426,20 @@ main {
   padding-bottom: 6px;
   border-bottom: 2px solid var(--ink-dim);
 }
+#view-settings h2.settings-sub { margin-top: 8px; }
+
+#settings-form { display: flex; flex-direction: column; gap: 10px; }
+
+/* keyboard guide: one shortcut per row, keys left, action right */
+.key-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  font-size: 16px;
+  color: var(--text-2);
+}
+.key-row .keys { flex: none; color: var(--text-1); }
 
 .field { display: flex; flex-direction: column; gap: 4px; border: none; }
 .field > span {
