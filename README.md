@@ -2,7 +2,7 @@
 <h1 align="center">Rex — select text, tap Ctrl, ask</h1>
 <p align="center"><b>The quick answer, without losing your thread.</b></p>
 
-<p align="center"><img src="assets/rex-demo.gif" width="760" alt="A code line gets selected in a long AI chat and Rex explains it in place" /></p>
+<p align="center"><img src="assets/rex-demo-2.gif" width="760" alt="A code line gets selected in a long AI chat and Rex answers it in place, with close-ups following the selection and the popup" /></p>
 
 You're deep in a long AI chat, a dense article, or someone else's code — and one line stops you. Opening a new chat means losing your focus.
 
